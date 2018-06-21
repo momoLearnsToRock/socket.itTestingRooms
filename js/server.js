@@ -18,7 +18,24 @@ io.on('connection', function (socket) {
     socket.on("chat message", (msg) => {
         io.emit("chat message", msg);
     });
+    socket.on('joinRoom', (room) => {
+        socket.join(room, () => {
+            console.log(`socket joined the room ${socket.rooms[room]}`);
+        });
+    });
 });
+const room1 = 'room1';
+const room2 = 'room2';
+let i = 0;
+let j = 0;
+setInterval(() => {
+    io.sockets.in(room1).emit('roomMessage', `you are listening to ${room1} in sequence ${i}`);
+    i++;
+}, 5000);
+setInterval(() => {
+    io.sockets.in(room2).emit('roomMessage', `you are listening to ${room2} in sequence ${j}`);
+    j++;
+}, 5000);
 http.listen(3005, () => {
     console.log('listening on port 3005');
 });
